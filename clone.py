@@ -3,7 +3,8 @@ import csv
 import numpy as np
 
 lines = []
-with open('data/data/driving_log.csv') as csvfile:
+#with open('data/data/driving_log.csv') as csvfile:
+with open('/home/carnd/data/CarND-Behavioral-Cloning-P3/data/driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
@@ -13,7 +14,7 @@ measurements = []
 for line in lines[1:]:
 	source_path = line[0]
 	filename = source_path.split('/')[-1]
-	current_path = 'data/data/IMG/' + filename
+	current_path = '/home/carnd/data/CarND-Behavioral-Cloning-P3/data/IMG/' + filename
 	image = cv2.imread(current_path)
 	images.append(image)
 	measurement = float(line[3])
