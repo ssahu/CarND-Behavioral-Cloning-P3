@@ -12,16 +12,23 @@ with open('/home/carnd/data/CarND-Behavioral-Cloning-P3/data/driving_log.csv') a
 images = []
 measurements = []
 for line in lines[1:]:
-	source_path = line[0]
-	filename = source_path.split('/')[-1]
-	current_path = '/home/carnd/data/CarND-Behavioral-Cloning-P3/data/IMG/' + filename
-	image = cv2.imread(current_path)
-	images.append(image)
-	measurement = float(line[3])
-	measurements.append(measurement)
-	#flipped images
-	images.append(np.fliplr(image))
-	measurements.append(-measurement)
+	directory = '/home/carnd/data/CarND-Behavioral-Cloning-P3/data/IMG/'
+	filenames = [t.split('/')[-1] for t in line[0:3]]
+	img_center = cv2.imread(directory + filenames[0])
+	img_left = cv2.imread(directory + filenames[1])
+	img_right = cv2.imread(directory + filenames[2])
+
+	#create adjusted steering adjustments for the side camera images
+	correction = 0.2 #parameter
+	steering_center = float(line[3])
+	steering_left = steering_center + correction
+	steering_right = steering_center - correction
+
+	#add images and angles to data set
+	images.extend([img_center, img_left, img_right])
+	measurements.extend([steering_center, steering_left, steering_right])
+	images.extend([np.fliplr(img_center), np.fliplr(img_left), np.fliplr(img_right)])
+	measurements.extend([-steering_center, -steering_left, -steering_right])
 
 X_train = np.array(images)
 y_train = np.array(measurements)
